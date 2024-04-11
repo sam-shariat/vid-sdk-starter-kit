@@ -39,8 +39,8 @@ import {
 } from 'react-icons/ri';
 import { MdOutlinePreview, MdOutlineVisibility } from 'react-icons/md';
 import axios from 'axios';
-import { useAddress } from '@thirdweb-dev/react';
-import { createWeb3Name } from '@web3-name-sdk/core';
+// import { useAddress } from '@thirdweb-dev/react';
+// import { createWeb3Name } from '@web3-name-sdk/core';
 import { useRouter } from 'next/router';
 import { sleep } from '../../core/utils';
 import Avatar from '../Profile/Avatar';
@@ -50,7 +50,7 @@ import { useTranslate } from '../../core/lib/hooks/use-translate';
 function ManageSection() {
   const { provider } = useVenomProvider();
   const { isConnected, account } = useConnect();
-  const ethAddress = useAddress();
+  const ethAddress = '';//useAddress();
   const [_ethAddress, _setEthAddress] = useState(ethAddress);
   const [listIsEmpty, setListIsEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,7 +68,7 @@ function ManageSection() {
   const [isConfirming, setIsConfirming] = useState(false);
   const minFee = 660000000;
   const { colorMode } = useColorMode();
-  const web3Name = createWeb3Name();
+  //const web3Name = createWeb3Name();
   const { pathname } = useRouter();
 
   const loadByContract = async (_contractAddress: string) => {
@@ -152,43 +152,6 @@ function ManageSection() {
     }
   };
 
-  const loadEthNFTs = async () => {
-    try {
-      // Take a salted code
-      // console.log('loading all nfts', account?.address);
-      if (!ethAddress) return;
-      setNftJsons([]);
-      setIsLoading(true);
-      setListIsEmpty(false);
-
-      const nfts = await web3Name.getDomainNames({ address: ethAddress });
-      console.log(ethAddress, nfts);
-
-      nfts.map(async (nft: any) => {
-        try {
-          //let r = await web3Name.getDomainRecord({name: nft});
-          let _avatar = await web3Name.getDomainRecord({ name: nft, key: 'avatar' });
-          let _name = await web3Name.getDomainRecord({ name: nft, key: 'name' });
-          let _nftJson: BaseNftJson = { name: nft, avatar: _avatar ?? '', address: nft };
-          //_nftJson.ipfsData = _venomid;
-          _nftJson.address = nft; //_nftJson.preview?.source;
-          _nftJson.network = nft.slice(nft.indexOf('.') + 1); //_nftJson.preview?.source;
-          _nftJson.external_url = SITE_PROFILE_URL + 'sid/' + _nftJson.name;
-          _nftJson.manageUrl = '/managesid/' + _nftJson.address;
-          console.log(_nftJson);
-          setNftJsons((nfts) => [...(nfts ? nfts : []), _nftJson]);
-        } catch (e: any) {
-          // console.log('error getting venomid nft ', indexAddress);
-        }
-      });
-
-      setLoaded(true);
-      setIsLoading(false);
-    } catch (e) {
-      console.error(e);
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (nftjsons?.length === 0 && loaded) {
@@ -210,11 +173,9 @@ function ManageSection() {
 
         if (!loaded || network !== _network || ethAddress !== _ethAddress) {
           console.log(network);
-          if (network === 'venom') {
+          
             loadVenomNFTs();
-          } else {
-            loadEthNFTs();
-          }
+          
           _setNetwork(network);
           _setEthAddress(ethAddress);
         }
@@ -252,7 +213,7 @@ function ManageSection() {
                   key={`reload-${network}-nfts`}
                   rounded={'full'}
                   size={'lg'}
-                  onClick={network === 'venom' ? loadVenomNFTs : loadEthNFTs}
+                  onClick={loadVenomNFTs}
                   gap={2}>
                   {notMobile ? 'Reload' : ''} <RiRestartLine size={'24'} />
                 </Button>

@@ -48,29 +48,29 @@ import {
   signMessageAtom,
   venomProviderAtom,
 } from '../../core/atoms';
-import {
-  ConnectWallet,
-  useAddress,
-  useBalance,
-  useChain,
-  useConnectionStatus,
-  useSwitchChain,
-} from '@thirdweb-dev/react';
-import { createWeb3Name } from '@web3-name-sdk/core';
+// import {
+//   ConnectWallet,
+//   useAddress,
+//   useBalance,
+//   useChain,
+//   useConnectionStatus,
+//   useSwitchChain,
+// } from '@thirdweb-dev/react';
+//import { createWeb3Name } from '@web3-name-sdk/core';
 import { getAddressesFromIndex, getNftByIndex, saltCode } from '../../core/utils/nft';
 export default function ConnectButton() {
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { login, disconnect, isConnected, account } = useConnect();
-  const web3Name = createWeb3Name();
+  //const web3Name = createWeb3Name();
   const { provider } = useVenomProvider();
   const [network, setNetwork] = useAtom(networkAtom);
   //const ethAddress = useAtomValue(ethAtom);
-  const ethAddress = useAddress();
-  const _status = useConnectionStatus();
-  const ethBalance = useBalance();
-  const symbol = network === 'venom' ? 'VENOM' : 'BNB'; //ethBalance.data?.symbol;
-  const chain = useChain();
-  const switchChain = useSwitchChain();
+  const ethAddress = '';//useAddress();
+  // const _status = useConnectionStatus();
+  // const ethBalance = useBalance();
+  const symbol = 'VENOM' ;//network === 'venom' ? 'VENOM' : 'BNB'; //ethBalance.data?.symbol;
+  // const chain = useChain();
+  // const switchChain = useSwitchChain();
   const currentChain = 'BNB';
   const { colorMode } = useColorMode();
   const address =
@@ -82,13 +82,13 @@ export default function ConnectButton() {
       ? ethAddress
       : '';
   const balance =
-    network === 'venom'
-      ? account?.balance !== undefined
+    //network === 'venom'
+      account?.balance !== undefined
         ? Math.round(Number(account?.balance) / 10e5) / 10e2
         : 'Loading'
-      : ethBalance.data
-      ? ethBalance.data?.displayValue.slice(0, ethBalance.data?.displayValue.indexOf('.') + 4)
-      : 'Loading';
+      // : ethBalance.data
+      // ? ethBalance.data?.displayValue.slice(0, ethBalance.data?.displayValue.indexOf('.') + 4)
+      // : 'Loading';
 
   const [primaryName, setPrimaryName] = useAtom(primaryNameAtom);
   const [ethPrimaryName, setEthPrimaryName] = useAtom(ethPrimaryNameAtom);
@@ -173,9 +173,9 @@ export default function ConnectButton() {
       
 
 
-      if (_status !== 'connected' && _status !== 'connecting') {
-        switchNetwork('venom');
-      }
+      // if (_status !== 'connected' && _status !== 'connecting') {
+      //   switchNetwork('venom');
+      // }
       //}
     } catch {
       (e: any) => {
@@ -187,20 +187,20 @@ export default function ConnectButton() {
     //console.log('primary loaded')
   }
 
-  async function getEthPrimary() {
-    if (!ethAddress) return;
-    console.log(ethAddress);
-    try {
-      const _name = await web3Name.getDomainName({ address: ethAddress });
-      setEthPrimaryName({ name: _name ?? '', nftAddress: '' });
-    } catch {
-      (e: any) => {
-        console.log('error in eth primary', e);
-      };
-    }
+  // async function getEthPrimary() {
+  //   if (!ethAddress) return;
+  //   console.log(ethAddress);
+  //   try {
+  //     const _name = await web3Name.getDomainName({ address: ethAddress });
+  //     setEthPrimaryName({ name: _name ?? '', nftAddress: '' });
+  //   } catch {
+  //     (e: any) => {
+  //       console.log('error in eth primary', e);
+  //     };
+  //   }
 
-    setEthPrimaryLoaded(true);
-  }
+  //   setEthPrimaryLoaded(true);
+  // }
 
   useEffect(() => {
     //console.log(network,signMessage,isValidSignHash(signHash, signDate))
@@ -226,10 +226,10 @@ export default function ConnectButton() {
   const logout = async () => {
     await disconnect();
     setIsConnected(false);
-    if (_status !== 'connected') {
+    //if (_status !== 'connected') {
       switchNetwork('');
-    }
-    console.log(_status);
+    //}
+    //console.log(_status);
     setConnectedAccount('');
     setPrimaryName({ name: '', nftAddress: '' });
   };
@@ -245,8 +245,8 @@ export default function ConnectButton() {
     async function checkPrimary() {
       try {
         if (!ethPrimaryLoaded || address !== ethAddress) {
-          getEthPrimary();
-          console.log('getting eth primary')
+          //getEthPrimary();
+          //console.log('getting eth primary')
 
         }
 
@@ -479,7 +479,7 @@ export default function ConnectButton() {
                   </MenuList>
                 </Menu>
               )}
-              <ConnectWallet
+              {/* <ConnectWallet
                 theme={colorMode}
                 btnTitle="Connect Ethereum"
                 modalTitle="Connect Wallet"
@@ -516,31 +516,8 @@ export default function ConnectButton() {
                   title: 'One Link To Showcase All Your Assets',
                 }}
                 modalSize={notMobile ? 'wide' : 'compact'}
-              />
-              {network !== '' && (
-                <>
-                  <Text key={`${network}-network-title`}>
-                    Connected To {capFirstLetter(network)}
-                  </Text>
-                  {isConnected && ethAddress && (
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        switchNetwork(network === 'venom' ? String(currentChain) : 'venom');
-                        if (network === 'venom' && chain?.shortName.toUpperCase() !== 'BNB') {
-                          switchChain(56);
-                        }
-                      }}
-                      minH={'48px'}
-                      w="280px">
-                      <Center gap={2}>
-                        {/* <LinkIcon type="venom" key={'connect-wallet-venom'} /> */}
-                        <Text>Switch to {network === 'venom' ? currentChain : 'Venom'}</Text>
-                      </Center>
-                    </Button>
-                  )}
-                </>
-              )}
+              /> */}
+              
             </Stack>
           </MenuList>
         </Menu>
